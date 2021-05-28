@@ -6,3 +6,5 @@ Summer Olympics Locations : https://la.curbed.com/maps/olympics-map-los-angeles-
 
 Property Assesor Home Values:  https://data.lacounty.gov/Parcel-/Assessor-Parcel-Data-2020/42ne-gwcj/data
 
+
+
