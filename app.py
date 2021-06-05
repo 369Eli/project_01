@@ -19,7 +19,7 @@ def load_data(nrows):
 
 
 st.sidebar.title("Filters")
-house_types = st.sidebar.multiselect("Type",["Condo", "Single Family Residence"], default=["Single Family Residence"])
+house_types = st.sidebar.multiselect("Type",["Condo", "Single Family Residence"], default=["Single Family Residence", "Condo"])
 cities = st.sidebar.multiselect("City",["INGLEWOOD CA", "LONG BEACH CA"], default=["INGLEWOOD CA", "LONG BEACH CA"])
 
 data_load_state = st.text('Loading data...')
@@ -31,7 +31,7 @@ if st.checkbox('Show raw data'):
     st.write(data)
 
 st.write('You selected:', ', '.join([i for i in house_types]))
-filter_df = data[(data['specificusetype'].isin(house_types) & data['city'].isin(cities))]
+filter_df = data[(data['house_type'].isin(house_types) & data['city'].isin(cities))]
 
 st.subheader('2028 Olympic Venues')
 # center on compton
@@ -52,7 +52,7 @@ folium.Marker(
 
 for k,v in filter_df.iterrows():
   tooltip = v.propertylocation
-  popup_txt = f"{v.propertylocation}<br>Price per sqft: ${round(v.pricepersqft, 3)}<br>{v.specificusetype}"
+  popup_txt = f"{v.propertylocation}<br>Price per sqft: ${round(v.pricepersqft, 3)}<br>{v.house_type}"
   popup = folium.Popup(popup_txt, max_width=350,min_width=300)
   folium.Marker([v.lat, v.lon], popup=popup, tooltip=tooltip).add_to(m)
 
