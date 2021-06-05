@@ -5,7 +5,7 @@ from streamlit_folium import folium_static
 import folium
 
 
-st.title('FLOR REAL ESTATE')
+st.title('2028 Summer Olympics')
 
 DATA_URL = ('data.csv')
 
@@ -18,11 +18,9 @@ def load_data(nrows):
     return data
 
 
-st.sidebar.title("Specific Use Type")
-add_selectbox = st.sidebar.selectbox("Type",("Condo", "Single Family Home"))
-
-st.sidebar.title("City Filter")
-add_selectbox = st.sidebar.selectbox("City",("INGLEWOOD CA", "LONG BEACH CA"))
+st.sidebar.title("Filters")
+house_types = st.sidebar.multiselect("Type",["Condo", "Single Family Residence"], default=["Single Family Residence"])
+cities = st.sidebar.multiselect("City",["INGLEWOOD CA", "LONG BEACH CA"], default=["INGLEWOOD CA", "LONG BEACH CA"])
 
 data_load_state = st.text('Loading data...')
 data = load_data(10000)
@@ -32,13 +30,31 @@ if st.checkbox('Show raw data'):
     st.subheader('Raw data')
     st.write(data)
 
-st.subheader('Real Estate Map')
-# center on los angeles
-m = folium.Map(location=[33.8958, -118.2201], zoom_start=10)
+st.write('You selected:', ', '.join([i for i in house_types]))
+filter_df = data[(data['specificusetype'].isin(house_types) & data['city'].isin(cities))]
 
-for k,v in data.iterrows():
+st.subheader('2028 Olympic Venues')
+# center on compton
+m = folium.Map(location=[33.958226, -118.341981], zoom_start=10)
+
+folium.Marker(
+    location=[33.7637, -118.1927],
+    popup="Long Beach Sports Park",
+    icon=folium.Icon(color="green"),
+).add_to(m)
+
+folium.Marker(
+    location=[33.9582, -118.3419],
+    popup="The Great Western Forum",
+    icon=folium.Icon(color="red"),
+).add_to(m)
+
+
+for k,v in filter_df.iterrows():
   tooltip = v.propertylocation
-  folium.Marker([v.lat, v.lon], popup=f"<i>{v.propertylocation}</i> <i>Price per sqft: ${round(v.pricepersqft, 3)}</i>", tooltip=tooltip).add_to(m)
+  popup_txt = f"{v.propertylocation}<br>Price per sqft: ${round(v.pricepersqft, 3)}<br>{v.specificusetype}"
+  popup = folium.Popup(popup_txt, max_width=350,min_width=300)
+  folium.Marker([v.lat, v.lon], popup=popup, tooltip=tooltip).add_to(m)
 
 # call to render Folium map in Streamlit
 folium_static(m)
