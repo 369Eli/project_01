@@ -31,7 +31,7 @@ if st.checkbox('Show raw data'):
     st.write(data)
 
 st.write('You selected:', ', '.join([i for i in house_types]))
-filter_df = data[(data['house_type'].isin(house_types) & data['city'].isin(cities))]
+filter_df = data[(data['house_type'].isin(house_types)) & (data['city'].isin(cities))]
 
 st.subheader('2028 Olympic Venues')
 # center on compton
