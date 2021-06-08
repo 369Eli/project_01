@@ -5,7 +5,7 @@ from streamlit_folium import folium_static
 import folium
 
 
-st.title('2028 Summer Olympics')
+st.title('Real Estate Investment Ops')
 
 DATA_URL = ('data.csv')
 
@@ -22,33 +22,34 @@ st.sidebar.title("Filters")
 house_types = st.sidebar.multiselect("Type",["Condo", "Single Family Residence"], default=["Single Family Residence", "Condo"])
 cities = st.sidebar.multiselect("City",["INGLEWOOD CA", "LONG BEACH CA"], default=["INGLEWOOD CA", "LONG BEACH CA"])
 
+
+
 data_load_state = st.text('Loading data...')
 data = load_data(10000)
-data_load_state.text("Done! (using st.cache)")
+data_load_state.text("Available Real Estate In Los Angeles near 2028 Olympic Venues:\n Cities: \n Inglewood-SoFi Stadium\n Long Beach" )
 
 if st.checkbox('Show raw data'):
     st.subheader('Raw data')
     st.write(data)
 
-st.write('You selected:', ', '.join([i for i in house_types]))
+st.write('Search:',', '.join([i for i in house_types]))
 filter_df = data[(data['house_type'].isin(house_types)) & (data['city'].isin(cities))]
 
-st.subheader('2028 Olympic Venues')
-# center on compton
+st.subheader('2028 Olympic Venues\n Sofi Stadium \n Long Beach Convention Center')
+# center on map : city - Compton
 m = folium.Map(location=[33.958226, -118.341981], zoom_start=10)
 
 folium.Marker(
-    location=[33.7637, -118.1927],
-    popup="Long Beach Sports Park",
-    icon=folium.Icon(color="green"),
-).add_to(m)
-
-folium.Marker(
-    location=[33.9582, -118.3419],
-    popup="The Great Western Forum",
+    location=[33.7648, -118.1894],
+    popup="Long Beach Convention Center",
     icon=folium.Icon(color="red"),
 ).add_to(m)
 
+folium.Marker(
+    location=[33.9531, -118.3385],
+    popup="Inglewood SoFi Stadium",
+    icon=folium.Icon(color="red"),
+).add_to(m)
 
 for k,v in filter_df.iterrows():
   tooltip = v.propertylocation
